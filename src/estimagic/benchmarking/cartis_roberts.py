@@ -16,7 +16,9 @@ where available, on AMPL implementaions available here:
 from functools import partial
 
 import numpy as np
-from estimagic.benchmarking.more_wild import brown_almost_linear, linear_full_rank, linear_rank_one
+from estimagic.benchmarking.more_wild import brown_almost_linear
+from estimagic.benchmarking.more_wild import linear_full_rank
+from estimagic.benchmarking.more_wild import linear_rank_one
 from estimagic.benchmarking.more_wild import watson
 
 
@@ -493,11 +495,13 @@ def yatpsq_2(x, dim_in):
     return fvec
 
 
-
-def arglale(x, dim_out):
-    fvec = np.zeros(dim_out)
-
-    pass
+def eigen(x, param):
+    dim_in = int(np.sqrt(len(x) + 0.25))
+    xvec = x[: dim_in ** 2].reshape(dim_in, dim_in)
+    dvec = x[dim_in ** 2 :].reshape(dim_in, 1)
+    lvec = np.eye(dim_in) * dvec
+    fvec = xvec.T @ lvec @ xvec - param
+    return fvec.flatten()
 
 
 def get_start_points_msqrta(dim_in, flag=1):
@@ -518,6 +522,126 @@ def get_start_points_bdvalues(n):
         x[i] = (i + 1) * h * ((i + 1) * h - 1)
     return x
 
+
+avec = np.zeros((11, 11))
+avec[1, 1] = 1
+avec[2, 2] = 2
+avec[1, 2] = 0.0
+avec[3, 3] = 3
+avec[1, 3] = 0.0
+avec[2, 3] = 0.0
+avec[4, 4] = 4
+avec[1, 4] = 0.0
+avec[2, 4] = 0.0
+avec[3, 4] = 0.0
+avec[5, 5] = 5
+avec[1, 5] = 0.0
+avec[2, 5] = 0.0
+avec[3, 5] = 0.0
+avec[4, 5] = 0.0
+avec[6, 6] = 6
+avec[1, 6] = 0.0
+avec[2, 6] = 0.0
+avec[3, 6] = 0.0
+avec[4, 6] = 0.0
+avec[5, 6] = 0.0
+avec[7, 7] = 7
+avec[1, 7] = 0.0
+avec[2, 7] = 0.0
+avec[3, 7] = 0.0
+avec[4, 7] = 0.0
+avec[5, 7] = 0.0
+avec[6, 7] = 0.0
+avec[8, 8] = 8
+avec[1, 8] = 0.0
+avec[2, 8] = 0.0
+avec[3, 8] = 0.0
+avec[4, 8] = 0.0
+avec[5, 8] = 0.0
+avec[6, 8] = 0.0
+avec[7, 8] = 0.0
+avec[9, 9] = 9
+avec[1, 9] = 0.0
+avec[2, 9] = 0.0
+avec[3, 9] = 0.0
+avec[4, 9] = 0.0
+avec[5, 9] = 0.0
+avec[6, 9] = 0.0
+avec[7, 9] = 0.0
+avec[8, 9] = 0.0
+avec[10, 10] = 10
+avec[1, 10] = 0.0
+avec[2, 10] = 0.0
+avec[3, 10] = 0.0
+avec[4, 10] = 0.0
+avec[5, 10] = 0.0
+avec[6, 10] = 0.0
+avec[7, 10] = 0.0
+avec[8, 10] = 0.0
+avec[9, 10] = 0.0
+avec = avec[1:, 1:]
+
+
+qvec = np.eye(10)
+dvec = np.ones(10)
+
+
+bvec = np.zeros((11, 11))
+bvec[1, 2] = -1.0
+bvec[2, 2] = 2.0
+bvec[1, 3] = 0.0
+bvec[2, 3] = -1.0
+bvec[3, 3] = 2.0
+bvec[1, 4] = 0.0
+bvec[2, 4] = 0.0
+bvec[3, 4] = -1.0
+bvec[4, 4] = 2.0
+bvec[1, 5] = 0.0
+bvec[2, 5] = 0.0
+bvec[3, 5] = 0.0
+bvec[4, 5] = -1.0
+bvec[5, 5] = 2.0
+bvec[1, 6] = 0.0
+bvec[2, 6] = 0.0
+bvec[3, 6] = 0.0
+bvec[4, 6] = 0.0
+bvec[5, 6] = -1.0
+bvec[6, 6] = 2.0
+bvec[1, 7] = 0.0
+bvec[2, 7] = 0.0
+bvec[3, 7] = 0.0
+bvec[4, 7] = 0.0
+bvec[5, 7] = 0.0
+bvec[6, 7] = -1.0
+bvec[7, 7] = 2.0
+bvec[1, 8] = 0.0
+bvec[2, 8] = 0.0
+bvec[3, 8] = 0.0
+bvec[4, 8] = 0.0
+bvec[5, 8] = 0.0
+bvec[6, 8] = 0.0
+bvec[7, 8] = -1.0
+bvec[8, 8] = 2.0
+bvec[1, 9] = 0.0
+bvec[2, 9] = 0.0
+bvec[3, 9] = 0.0
+bvec[4, 9] = 0.0
+bvec[5, 9] = 0.0
+bvec[6, 9] = 0.0
+bvec[7, 9] = 0.0
+bvec[8, 9] = -1.0
+bvec[9, 9] = 2.0
+bvec[1, 10] = 0.0
+bvec[2, 10] = 0.0
+bvec[3, 10] = 0.0
+bvec[4, 10] = 0.0
+bvec[5, 10] = 0.0
+bvec[6, 10] = 0.0
+bvec[7, 10] = 0.0
+bvec[8, 10] = 0.0
+bvec[9, 10] = -1.0
+bvec[10, 10] = 2.0
+bvec = bvec[1:, 1:]
 
 CARTIS_ROBERTS_PROBLEMS = {
     "argtrig": {
@@ -725,19 +849,33 @@ CARTIS_ROBERTS_PROBLEMS = {
         "start_criterion": 1.831687e5,
         "solution_criterion": 0,
     },
-    "arglale":{
-        "criterion": partial(linear_full_rank, dim_out = 400),
+    "arglale": {
+        "criterion": partial(linear_full_rank, dim_out=400),
         "start_x": np.ones(100),
-        "solution_x": None, 
+        "solution_x": None,
         "start_criterion": 700,
-        "solution_criterion": 300
+        "solution_criterion": 300,
     },
-    "arglble":{
-        "criterion": partial(linear_rank_one, dim_out = 400),
+    "arglble": {
+        "criterion": partial(linear_rank_one, dim_out=400),
         "start_x": np.ones(100),
-        "solution_x": None, 
+        "solution_x": None,
         "start_criterion": 5.460944e14,
-        "solution_criterion": 99.62547
-    }
-
+        "solution_criterion": 99.62547,
+    },
+    "eigena": {
+        "criterion": partial(eigen, param=avec),
+        "start_x": np.concatenate([qvec.flatten(), dvec.flatten()]),
+        "solution_x": None,
+        "start_criterion": 285,
+        "solution_criterion": 0,
+        "lower_bounds": np.zeros(len(qvec.flatten()) + len(dvec.flatten())),
+    },
+    "eigenb": {
+        "criterion": partial(eigen, param=bvec),
+        "start_x": np.concatenate([qvec.flatten(), dvec.flatten()]),
+        "solution_x": None,
+        "start_criterion": 19,
+        "solution_criterion": 0,
+    },
 }
